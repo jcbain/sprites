@@ -17,30 +17,26 @@ const SpriteImg = styled.img`
 
 const Sprite = (props) => {
   const [ leftPosition, setLeftPosition ] = useState(0);
-  const [ mode, setMode ] = useState('walk');
-  const [ animal, setAnimal ] = [{name: 'dog_2', pixels: 48}]
+  const [ mode ] = useState('walk');
+  const [ animal ] = [{name: 'dog_2', pixels: 48}]
   const [ direction, setDirection ] = useState(1)
 
-  const modeStates = {
-    death: 4, 
-    attack: 4, 
-    hurt: 2, 
-    idle: 4,
-    walk: 6
-  }
-
+  
   useEffect(() => {
+    const modeStates = {
+      death: 4, 
+      attack: 4, 
+      hurt: 2, 
+      idle: 4,
+      walk: 6
+    }
     const movePlayer = e => {
       console.log(e.keyCode)
-      if([37, 39].includes(e.keyCode)){
-        if(e.keyCode === 39) {
-          setDirection(1)
-        } else {
-          setDirection(-1)
-        }
-        setLeftPosition(prev => {
-          // need to implement logic for moving backwards
-          if(prev >= (modeStates[mode] * animal.pixels) - animal.pixels ){
+
+      if(e.keyCode === 39){
+        setDirection(1);
+        setLeftPosition( prev => {
+          if(prev >= (modeStates[mode] * animal.pixels) - animal.pixels ) {
             return 0
           }
           return prev + (animal.pixels * direction);
