@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  width: 48px;
-  height: 48px;
+  width: ${({wid}) => wid}px;
+  height: ${({ht}) => ht}px;
   position: relative;
   overflow: hidden;
 `;
@@ -16,16 +16,26 @@ const SpriteImg = styled.img`
 
 const Sprite = (props) => {
   const [ leftPosition, setLeftPosition ] = useState(0);
+  const [ mode, setMode ] = useState('walk');
+  const [ animal, setAnimal ] = [{name: 'bird_1', pixels: 32}]
+
+  const modeStates = {
+    death: 4, 
+    attack: 4, 
+    hurt: 2, 
+    idle: 4,
+    walk: 6
+  }
 
   useEffect(() => {
     const movePlayer = e => {
       console.log(e.keyCode)
       if(e.keyCode === 39){
         setLeftPosition(prev => {
-          if(prev >= 144){
+          if(prev >= (modeStates[mode] * animal.pixels) - animal.pixels ){
             return 0
           }
-          return prev + 48;
+          return prev + animal.pixels;
         })
       }
     }
@@ -35,13 +45,13 @@ const Sprite = (props) => {
       document.removeEventListener('keydown', movePlayer)
     }
 
-  }, [])
+  }, [mode, animal])
 
 
 
   return (
-    <Container className="sprite-container">
-      <SpriteImg className="sprite" src="images/dog_1_death.png" leftpos={leftPosition}/>
+    <Container wid={animal.pixels} ht={animal.pixels} className="sprite-container">
+      <SpriteImg className="sprite" src={`images/${animal.name}/${mode}.png`} leftpos={leftPosition}/>
     </Container>
   )
 }
